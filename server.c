@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "socket.h"
+
 int main(int argc, char **argv) {
     if (argc < 3) {
         fprintf(stderr, "Usage: %s port path_to_web_root\n", argv[0]);
@@ -14,6 +16,9 @@ int main(int argc, char **argv) {
     // DEBUGGING
     printf("Port no: %s\n", port_number);
     printf("Path to root: %s\n", path_to_root);
+
+    // Handle sockets
+    int fd = listen_socket(port_number);
 
     return EXIT_SUCCESS;
 }
