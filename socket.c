@@ -20,7 +20,7 @@ int listen_socket(char* port_number) {
         exit(EXIT_FAILURE);
     }
 
-    memset((char *) &server_addr, sizeof(server_addr));
+    memset((char *) &server_addr, 0, sizeof(server_addr));
 
     int port_number = atoi(port_number);
 
