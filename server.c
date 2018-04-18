@@ -84,12 +84,15 @@ int main(int argc, char **argv) {
         }
 
         // Get the HTTP request-line
-        char* input;
-        input = strtok(buffer, "\n");
+        char* input = strtok(buffer, "\n");
         printf("Here is the message: %s\n", input);
 
+        char request[strlen(input)];
+        strcpy(request, input);
+        printf("Here is the message again: %s\n", request);
+
         // Get the request-URI
-        char* method = strtok(input, " ");
+        char* method = strtok(request, " ");
         char* target = strtok(NULL, " ");
         printf("Target file: %s\n", target);
 
@@ -109,6 +112,15 @@ int main(int argc, char **argv) {
         sprintf(file, "%s%s", path_to_root, new_target);
 
         printf("File full path: %s\n", file);
+
+        // Write into response buffer
+        char resource[target_len];
+        strcpy(resource, new_target);
+        printf("Resource: %s\n", resource);
+
+        char* name = strtok(resource, ".");
+        char* extension = strtok(NULL, ".");
+        printf("File extension: %s\n", extension);
 
         // Formulate HTTP response
         char response[] = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n<html>\n<body>\n<p>Hello!</p>\n</body>\n</html>\0";
