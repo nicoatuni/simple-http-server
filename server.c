@@ -71,7 +71,17 @@ int main(int argc, char **argv) {
             close(new_fd);
             exit(EXIT_FAILURE);
         }
+
+        // process stream of data
+        
+
+
+
+
+        // close connection after everything's done
+        close(new_fd);
     }
 
+    close(fd);
     return EXIT_SUCCESS;
 }
