@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
     int fd, new_fd;
     struct sockaddr_in server_addr, client_addr;
     socklen_t client_len;
-    char buffer[256];
+    char buffer[128];
 
     // Create TCP socket
     fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -72,19 +72,42 @@ int main(int argc, char **argv) {
             exit(EXIT_FAILURE);
         }
 
-        // process stream of data
-        memset(buffer, 0, 256);
+        // Process stream of data
+        memset(buffer, 0, 128);
 
-        int n = read(new_fd, buffer, 255);
+        // Read HTTP request message
+        int n = read(new_fd, buffer, 127);
         if (n < 0) {
             perror("Error reading from socket");
             close(new_fd);
             exit(EXIT_FAILURE);
         }
 
-        printf("Here is the message: %s\n", buffer);
+        // Get the HTTP request-line
+        char* input;
+        input = strtok(buffer, "\n");
+        printf("Here is the message: %s\n", input);
 
-        n = write(new_fd, "I got your message", 18);
+        // Get the request-URI
+        char* method = strtok(input, " ");
+        char* target = strtok(NULL, " ");
+        printf("Target file: %s\n", target);
+
+        // Get the full path of the requested resource
+        char* file = malloc((strlen(path_to_root) + strlen(target)) * (sizeof *path_to_root));
+        strcpy(file, path_to_root);
+        if (strcmp(target, "/") == 0) {
+            strcat(file, "/index.html");
+        } else {
+            strcat(file, target);
+        }
+        printf("File full path: %s\n", file);
+
+        // Formulate HTTP response
+        char response[] = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n<html>\n<body>\n<p>Hello!</p>\n</body>\n</html>\0";
+
+        // Send out HTTP response
+        n = write(new_fd, response, strlen(response));
         if (n < 0) {
             perror("Error writing to socket");
             close(new_fd);
