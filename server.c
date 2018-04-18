@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
     }
 
     // Get command line arguments
-    char* port_number = argv[1];
+    int port_number = atoi(argv[1]);
     char* path_to_root = argv[2];
 
     // DEBUGGING
@@ -37,8 +37,6 @@ int main(int argc, char **argv) {
     }
 
     memset((char *) &server_addr, 0, sizeof(server_addr));
-
-    int port_number = atoi(port_number);
 
     // Create address we're going to listen on (given port number) - converted
     // to network byte order & any IP address for this machine
