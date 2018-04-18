@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
-    // for (;;) {
+    for (;;) {
         client_len = sizeof(client_addr);
 
         // Block until a connection is ready to be accepted.
@@ -93,8 +93,10 @@ int main(int argc, char **argv) {
         }
 
         // close connection after everything's done
+        fprintf(stdout, "Closing connection...\n");
         close(new_fd);
-    // }
+        fprintf(stdout, "Connection closed.\n");
+    }
 
     close(fd);
     return EXIT_SUCCESS;
