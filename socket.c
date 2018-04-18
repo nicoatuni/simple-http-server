@@ -33,21 +33,30 @@ int listen_socket(char* port_number) {
     // Bind socket
     if (bind(fd, (struct sockaddr *) &server_addr, sizeof(server_addr)) < 0) {
         perror("Error during binding");
+        close(fd);
         exit(EXIT_FAILURE);
     }
 
     // Listen on socket - means we're ready to accept connections - incoming
     // connection requests will be queued
-    listen(fd, 5);
-
-    client_len = sizeof(client_addr);
-
-    // Accept a connection - block until a connection is ready to be accepted.
-    // Get back a new file descriptor to communicate on.
-    new_fd = accept(fd, (struct sockaddr *) &client_addr, &client_len);
-    if (new_fd < 0) {
-        perror("Error during accepting");
+    if (listen(fd, 20) < 0) {
+        perror("Error when listening");
+        close(fd);
         exit(EXIT_FAILURE);
+    }
+
+    for (;;) {
+        client_len = sizeof(client_addr);
+
+        // Block until a connection is ready to be accepted.
+        // Get back a new file descriptor to communicate on.
+        new_fd = accept(fd, (struct sockaddr *) &client_addr, &client_len);
+
+        if (new_fd < 0) {
+            perror("Error during accepting");
+            close(new_fd);
+            exit(EXIT_FAILURE);
+        }
     }
 
     return new_fd;
