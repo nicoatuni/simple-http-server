@@ -6,7 +6,7 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <unistd.h>
-
+#include <assert.h>
 
 int main(int argc, char **argv) {
     if (argc < 3) {
