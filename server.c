@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
     char* path_to_root = argv[2];
 
     // DEBUGGING
-    printf("Port no: %s\n", port_number);
+    printf("Port no: %d\n", port_number);
     printf("Path to root: %s\n", path_to_root);
 
     // Handle sockets
