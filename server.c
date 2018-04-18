@@ -93,16 +93,21 @@ int main(int argc, char **argv) {
         char* target = strtok(NULL, " ");
         printf("Target file: %s\n", target);
 
+        char* new_target;
+        if (strcmp(target, "/") == 0) {
+            new_target = "index.html";
+        } else {
+            new_target = target + 1;
+        }
+
         // Get the full path of the requested resource
-        char* file = malloc((strlen(path_to_root) + strlen(target)) * (sizeof *path_to_root));
+        size_t path_len = strlen(path_to_root);
+        size_t target_len = strlen(new_target);
+        char* file = (char*) malloc((path_len + target_len) * (sizeof *file));
         assert(file);
 
-        strcpy(file, path_to_root);
-        if (strcmp(target, "/") == 0) {
-            strcat(file, "/index.html");
-        } else {
-            strcat(file, target);
-        }
+        sprintf(file, "%s%s", path_to_root, new_target);
+
         printf("File full path: %s\n", file);
 
         // Formulate HTTP response
