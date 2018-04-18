@@ -25,6 +25,7 @@ int main(int argc, char **argv) {
     int fd, new_fd;
     struct sockaddr_in server_addr, client_addr;
     socklen_t client_len;
+    char buffer[256];
 
     // Create TCP socket
     fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -59,7 +60,7 @@ int main(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
-    for (;;) {
+    // for (;;) {
         client_len = sizeof(client_addr);
 
         // Block until a connection is ready to be accepted.
@@ -73,14 +74,27 @@ int main(int argc, char **argv) {
         }
 
         // process stream of data
-        
+        memset(buffer, 0, 256);
 
+        int n = read(new_fd, buffer, 255);
+        if (n < 0) {
+            perror("Error reading from socket");
+            close(new_fd);
+            exit(EXIT_FAILURE);
+        }
 
+        printf("Here is the message: %s\n", buffer);
 
+        n = write(new_fd, "I got your message", 18);
+        if (n < 0) {
+            perror("Error writing to socket");
+            close(new_fd);
+            exit(EXIT_FAILURE);
+        }
 
         // close connection after everything's done
         close(new_fd);
-    }
+    // }
 
     close(fd);
     return EXIT_SUCCESS;
