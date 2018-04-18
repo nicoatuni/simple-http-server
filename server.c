@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
     int fd, new_fd;
     struct sockaddr_in server_addr, client_addr;
     socklen_t client_len;
-    char buffer[128];
+    char buffer[2048];
 
     // Create TCP socket
     fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -73,10 +73,10 @@ int main(int argc, char **argv) {
         }
 
         // Process stream of data
-        memset(buffer, 0, 128);
+        memset(buffer, 0, 2048);
 
         // Read HTTP request message
-        int n = read(new_fd, buffer, 127);
+        int n = read(new_fd, buffer, 2047);
         if (n < 0) {
             perror("Error reading from socket");
             close(new_fd);
