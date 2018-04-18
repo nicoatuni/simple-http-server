@@ -95,6 +95,8 @@ int main(int argc, char **argv) {
 
         // Get the full path of the requested resource
         char* file = malloc((strlen(path_to_root) + strlen(target)) * (sizeof *path_to_root));
+        assert(file);
+
         strcpy(file, path_to_root);
         if (strcmp(target, "/") == 0) {
             strcat(file, "/index.html");
@@ -115,9 +117,7 @@ int main(int argc, char **argv) {
         }
 
         // close connection after everything's done
-        fprintf(stdout, "Closing connection...\n");
         close(new_fd);
-        fprintf(stdout, "Connection closed.\n");
     }
 
     close(fd);
