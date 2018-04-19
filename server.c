@@ -138,23 +138,27 @@ int main(int argc, char **argv) {
         // printf("%s", mime_type);
 
         // Read the requested resource
+        bool no_file = FALSE;
         char* file_buffer;
         long file_len;
         FILE* fp = fopen(file, "rb");
         if (fp == NULL) {
-            perror("Error opening file");
-            exit(EXIT_FAILURE);
+            no_file = TRUE;
+        } else {
+            fseek(fp, 0, SEEK_END);            // Jump to the end of the file
+            file_len = ftell(fp);       // Get the current byte offset in the file
+            rewind(fp);                 // Jump back to the beginning of the file
+
+            file_buffer = (char *)malloc((file_len) * sizeof(*file_buffer));
+            assert(file_buffer);
         }
 
-        fseek(fp, 0, SEEK_END);            // Jump to the end of the file
-        file_len = ftell(fp);       // Get the current byte offset in the file
-        rewind(fp);                 // Jump back to the beginning of the file
-
-        file_buffer = (char *)malloc((file_len) * sizeof(*file_buffer));
-        assert(file_buffer);
-
         // Formulate HTTP response
-        char response[] = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n";
+        if (no_file) {
+            char response[] = "HTTP/1.0 404 Not Found\r\n\r\n";
+        } else {
+            char response[] = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n";
+        }
 
         // Send out HTTP response
         n = write(new_fd, response, strlen(response));
@@ -163,8 +167,10 @@ int main(int argc, char **argv) {
             close(new_fd);
             exit(EXIT_FAILURE);
         }
-
-        sendfile(new_fd, fileno(fp), NULL, (sizeof file_buffer));
+        
+        if (!no_file) {
+            sendfile(new_fd, fileno(fp), NULL, (sizeof file_buffer));
+        }
         // printf("Sent file.\n");
         // n = write(new_fd, file_buffer, bytes_read);
         // if (n < 0) {
