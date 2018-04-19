@@ -138,12 +138,12 @@ int main(int argc, char **argv) {
         // printf("%s", mime_type);
 
         // Read the requested resource
-        bool no_file = FALSE;
+        int no_file = 0;
         char* file_buffer;
         long file_len;
         FILE* fp = fopen(file, "rb");
         if (fp == NULL) {
-            no_file = TRUE;
+            no_file = 1;
         } else {
             fseek(fp, 0, SEEK_END);            // Jump to the end of the file
             file_len = ftell(fp);       // Get the current byte offset in the file
