@@ -166,7 +166,7 @@ int main(int argc, char **argv) {
             exit(EXIT_FAILURE);
         }
 
-        sendfile(new_fd, fp, NULL, (sizeof file_buffer));
+        sendfile(new_fd, fileno(fp), NULL, (sizeof file_buffer));
         // n = write(new_fd, file_buffer, bytes_read);
         // if (n < 0) {
             // perror("Error writing file content to socket");
