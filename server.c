@@ -149,7 +149,7 @@ int main(int argc, char **argv) {
             fseek(fp, 0, SEEK_END);            // Jump to the end of the file
             file_len = ftell(fp);       // Get the current byte offset in the file
             rewind(fp);                 // Jump back to the beginning of the file
-            printf("File_len: %ld\n", file_len);
+            // printf("File_len: %ld\n", file_len);
             file_buffer = (char *)malloc(file_len * sizeof(char));
             assert(file_buffer);
 
@@ -163,7 +163,7 @@ int main(int argc, char **argv) {
         // }
 
         printf("Content: %s\n", file_buffer);
-        printf("Bytes_read: %d\n", bytes_read);
+        // printf("Bytes_read: %d\n", bytes_read);
         // printf("Sizeof file_buffer: %lu\n", (sizeof file_buffer));
 
         // Formulate HTTP response
@@ -181,7 +181,7 @@ int main(int argc, char **argv) {
         if (!no_file) {
             sprintf(response, "%s%s", status_line, mime_type);
             printf("Response: %s\n", response);
-            printf("Strlen(response): %lu\n", strlen(response));
+            // printf("Strlen(response): %lu\n", strlen(response));
             n = write(new_fd, response, strlen(response));
         } else {
             n = write(new_fd, status_line, strlen(status_line));
