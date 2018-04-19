@@ -122,6 +122,19 @@ int main(int argc, char **argv) {
         char* extension = strtok(NULL, ".");
         printf("File extension: %s\n", extension);
 
+        char* mime_type;
+        if (!strcmp(extension, "html")) {
+            mime_type = "Content-Type: text/html";
+        } else if (!strcmp(extension, "css")) {
+            mime_type = "Content-Type: text/css";
+        } else if (!strcmp(extension, "js")) {
+            mime_type = "Content-Type: text/javascript";
+        } else if (!strcmp(extension, "jpg")) {
+            mime_type = "Content-Type: image/jpeg";
+        } else {
+            mime_type = "";
+        }
+
         // Formulate HTTP response
         char response[] = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n<html>\n<body>\n<p>Hello!</p>\n</body>\n</html>\0";
 
