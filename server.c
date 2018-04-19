@@ -167,28 +167,39 @@ int main(int argc, char **argv) {
         // printf("Sizeof file_buffer: %lu\n", (sizeof file_buffer));
 
         // Formulate HTTP response
-        char* response;
+        char* status_line;
         if (no_file) {
-            response = "HTTP/1.0 404 Not Found\r\n\r\n";
+            status_line = "HTTP/1.0 404 Not Found\r\n\r\n";
         } else {
-            response = "HTTP/1.0 200 OK\r\n";
+            status_line = "HTTP/1.0 200 OK\r\n";
         }
 
+        char* response = malloc(sizeof(char) * (strlen(status_line) + strlen(mime_type)));
+        assert(response);
+
         // Send out HTTP response
-        n = write(new_fd, response, strlen(response));
+        if (!no_file) {
+            sprintf(response, "%s%s", status_line, mime_type);
+            printf("Response: %s\n", response);
+            printf("Strlen(response): %lu\n", strlen(response));
+            n = write(new_fd, response, strlen(response));
+        } else {
+            n = write(new_fd, status_line, strlen(status_line));
+        }
         if (n < 0) {
             perror("Error writing response header to socket");
             close(new_fd);
             exit(EXIT_FAILURE);
         }
+        free(response);
 
         if (!no_file) {
-            n = write(new_fd, mime_type, strlen(mime_type));
-            if (n < 0) {
-                perror("Error writing Content-Type to socket");
-                close(new_fd);
-                exit(EXIT_FAILURE);
-            }
+            // n = write(new_fd, mime_type, strlen(mime_type));
+            // if (n < 0) {
+                // perror("Error writing Content-Type to socket");
+                // close(new_fd);
+                // exit(EXIT_FAILURE);
+            // }
 
             // sendfile(new_fd, fileno(fp), NULL, (sizeof file_buffer));
             n = write(new_fd, file_buffer, bytes_read);
@@ -198,7 +209,7 @@ int main(int argc, char **argv) {
                 exit(EXIT_FAILURE);
             }
         }
-        // free(file_buffer);
+        free(file_buffer);
 
         // close connection after everything's done
         close(new_fd);
