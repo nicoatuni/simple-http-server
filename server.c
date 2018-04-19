@@ -124,15 +124,15 @@ int main(int argc, char **argv) {
 
         char* mime_type;
         if (!strcmp(extension, "html")) {
-            mime_type = "Content-Type: text/html";
+            mime_type = "Content-Type: text/html\r\n";
         } else if (!strcmp(extension, "css")) {
-            mime_type = "Content-Type: text/css";
+            mime_type = "Content-Type: text/css\r\n";
         } else if (!strcmp(extension, "js")) {
-            mime_type = "Content-Type: text/javascript";
+            mime_type = "Content-Type: text/javascript\r\n";
         } else if (!strcmp(extension, "jpg")) {
-            mime_type = "Content-Type: image/jpeg";
+            mime_type = "Content-Type: image/jpeg\r\n";
         } else {
-            mime_type = "";
+            mime_type = "\r\n";
         }
 
         // Formulate HTTP response
