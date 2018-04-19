@@ -86,16 +86,16 @@ int main(int argc, char **argv) {
 
         // Get the HTTP request-line
         char* input = strtok(buffer, "\n");
-        printf("Here is the message: %s\n", input);
+        // printf("Here is the message: %s\n", input);
 
         char request[strlen(input)];
         strcpy(request, input);
-        printf("Here is the message again: %s\n", request);
+        // printf("Here is the message again: %s\n", request);
 
         // Get the request-URI
         char* method = strtok(request, " ");
         char* target = strtok(NULL, " ");
-        printf("Target file: %s\n", target);
+        // printf("Target file: %s\n", target);
 
         char* new_target;
         if (strcmp(target, "/") == 0) {
@@ -112,16 +112,16 @@ int main(int argc, char **argv) {
 
         sprintf(file, "%s%s", path_to_root, new_target);
 
-        printf("File full path: %s\n", file);
+        // printf("File full path: %s\n", file);
 
         // Write into response buffer
         char resource[target_len];
         strcpy(resource, new_target);
-        printf("Resource: %s\n", resource);
+        // printf("Resource: %s\n", resource);
 
         char* name = strtok(resource, ".");
         char* extension = strtok(NULL, ".");
-        printf("File extension: %s\n", extension);
+        // printf("File extension: %s\n", extension);
 
         char* mime_type;
         if (!strcmp(extension, "html")) {
@@ -135,7 +135,7 @@ int main(int argc, char **argv) {
         } else {
             mime_type = "\r\n";
         }
-        printf("%s", mime_type);
+        // printf("%s", mime_type);
 
         // Read the requested resource
         char* file_buffer;
@@ -165,7 +165,7 @@ int main(int argc, char **argv) {
         }
 
         sendfile(new_fd, fileno(fp), NULL, (sizeof file_buffer));
-        printf("Sent file.\n");
+        // printf("Sent file.\n");
         // n = write(new_fd, file_buffer, bytes_read);
         // if (n < 0) {
             // perror("Error writing file content to socket");
