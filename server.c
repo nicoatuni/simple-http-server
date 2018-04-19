@@ -153,8 +153,6 @@ int main(int argc, char **argv) {
         file_buffer = (char *)malloc((file_len) * sizeof(*file_buffer));
         assert(file_buffer);
 
-        printf("File content: %s\n", file_buffer);
-
         // Formulate HTTP response
         char response[] = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n";
 
@@ -167,6 +165,7 @@ int main(int argc, char **argv) {
         }
 
         sendfile(new_fd, fileno(fp), NULL, (sizeof file_buffer));
+        printf("Sent file.\n");
         // n = write(new_fd, file_buffer, bytes_read);
         // if (n < 0) {
             // perror("Error writing file content to socket");
