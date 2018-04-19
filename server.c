@@ -125,13 +125,13 @@ int main(int argc, char **argv) {
 
         char* mime_type;
         if (!strcmp(extension, "html")) {
-            mime_type = "Content-Type: text/html\r\n";
+            mime_type = "Content-Type: text/html\r\n\r\n";
         } else if (!strcmp(extension, "css")) {
-            mime_type = "Content-Type: text/css\r\n";
+            mime_type = "Content-Type: text/css\r\n\r\n";
         } else if (!strcmp(extension, "js")) {
-            mime_type = "Content-Type: text/javascript\r\n";
+            mime_type = "Content-Type: text/javascript\r\n\r\n";
         } else if (!strcmp(extension, "jpg")) {
-            mime_type = "Content-Type: image/jpeg\r\n";
+            mime_type = "Content-Type: image/jpeg\r\n\r\n";
         } else {
             mime_type = "\r\n";
         }
@@ -154,10 +154,11 @@ int main(int argc, char **argv) {
         }
 
         // Formulate HTTP response
+        char* response;
         if (no_file) {
-            char response[] = "HTTP/1.0 404 Not Found\r\n\r\n";
+            response = "HTTP/1.0 404 Not Found\r\n\r\n";
         } else {
-            char response[] = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n";
+            response = "HTTP/1.0 200 OK\r\n";
         }
 
         // Send out HTTP response
@@ -167,10 +168,18 @@ int main(int argc, char **argv) {
             close(new_fd);
             exit(EXIT_FAILURE);
         }
-        
+
         if (!no_file) {
+            n = write(new_fd, mime_type, strlen(mime_type));
+            if (n < 0) {
+                perror("Error writing Content-Type to socket");
+                close(new_fd);
+                exit(EXIT_FAILURE);
+            }
+
             sendfile(new_fd, fileno(fp), NULL, (sizeof file_buffer));
         }
+
         // printf("Sent file.\n");
         // n = write(new_fd, file_buffer, bytes_read);
         // if (n < 0) {
