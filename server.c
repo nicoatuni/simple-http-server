@@ -6,7 +6,6 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <sys/sendfile.h>
 #include <assert.h>
 
 int main(int argc, char **argv) {
@@ -141,17 +140,31 @@ int main(int argc, char **argv) {
         int no_file = 0;
         char* file_buffer;
         long file_len;
+        int bytes_read;
         FILE* fp = fopen(file, "rb");
         if (fp == NULL) {
             no_file = 1;
+            fclose(fp);
         } else {
             fseek(fp, 0, SEEK_END);            // Jump to the end of the file
             file_len = ftell(fp);       // Get the current byte offset in the file
             rewind(fp);                 // Jump back to the beginning of the file
-
-            file_buffer = (char *)malloc((file_len) * sizeof(*file_buffer));
+            printf("File_len: %ld\n", file_len);
+            file_buffer = (char *)malloc(file_len * sizeof(char));
             assert(file_buffer);
+
+            bytes_read = fread(file_buffer, sizeof(char), file_len, fp);
+            fclose(fp);
         }
+        free(file);
+
+        // if (strcmp(extension, "jpg")) {
+            // file_buffer[file_len] = '\0';
+        // }
+
+        printf("Content: %s\n", file_buffer);
+        printf("Bytes_read: %d\n", bytes_read);
+        // printf("Sizeof file_buffer: %lu\n", (sizeof file_buffer));
 
         // Formulate HTTP response
         char* response;
@@ -177,16 +190,15 @@ int main(int argc, char **argv) {
                 exit(EXIT_FAILURE);
             }
 
-            sendfile(new_fd, fileno(fp), NULL, (sizeof file_buffer));
+            // sendfile(new_fd, fileno(fp), NULL, (sizeof file_buffer));
+            n = write(new_fd, file_buffer, bytes_read);
+            if (n < 0) {
+                perror("Error writing file content to socket");
+                close(new_fd);
+                exit(EXIT_FAILURE);
+            }
         }
-
-        // printf("Sent file.\n");
-        // n = write(new_fd, file_buffer, bytes_read);
-        // if (n < 0) {
-            // perror("Error writing file content to socket");
-            // close(new_fd);
-            // exit(EXIT_FAILURE);
-        // }
+        // free(file_buffer);
 
         // close connection after everything's done
         close(new_fd);
