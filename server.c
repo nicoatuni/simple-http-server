@@ -96,12 +96,18 @@ int main(int argc, char **argv) {
         char* target = strtok(NULL, " ");
         // printf("Target file: %s\n", target);
 
-        char* new_target;
-        if (strcmp(target, "/") == 0) {
-            new_target = "index.html";
+        char new_target[100];
+        if (!strcmp(target, "/") || (target[strlen(target)-1] == '/')) {
+            target += 1;
+            strncpy(new_target, target, strlen(target));
+            strcat(new_target, "index.html");
         } else {
-            new_target = target + 1;
+            target += 1;
+            strncpy(new_target, target, strlen(target));
+            new_target[strlen(target)] = '\0';
         }
+
+        printf("Target: %s\n", new_target);
 
         // Get the full path of the requested resource
         size_t path_len = strlen(path_to_root);
@@ -156,7 +162,6 @@ int main(int argc, char **argv) {
             bytes_read = fread(file_buffer, sizeof(char), file_len, fp);
             fclose(fp);
         }
-        free(file);
 
         // if (strcmp(extension, "jpg")) {
             // file_buffer[file_len] = '\0';
@@ -210,6 +215,7 @@ int main(int argc, char **argv) {
             }
         }
         free(file_buffer);
+        free(file);
 
         // close connection after everything's done
         close(new_fd);
