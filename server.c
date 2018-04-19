@@ -6,6 +6,7 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <sys/sendfile.h>
 #include <assert.h>
 
 int main(int argc, char **argv) {
@@ -134,17 +135,44 @@ int main(int argc, char **argv) {
         } else {
             mime_type = "\r\n";
         }
+        printf("%s", mime_type);
+
+        // Read the requested resource
+        char* file_buffer;
+        long file_len;
+        FILE* fp = fopen(file, "rb");
+        if (fp == NULL) {
+            perror("Error opening file");
+            exit(EXIT_FAILURE);
+        }
+
+        fseek(fp, 0, SEEK_END);            // Jump to the end of the file
+        file_len = ftell(fp);       // Get the current byte offset in the file
+        rewind(fp);                 // Jump back to the beginning of the file
+
+        file_buffer = (char *)malloc((file_len) * sizeof(*file_buffer));
+        assert(file_buffer);
+
+        printf("File content: %s\n", file_buffer);
 
         // Formulate HTTP response
-        char response[] = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n<html>\n<body>\n<p>Hello!</p>\n</body>\n</html>\0";
+        char response[] = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n";
 
         // Send out HTTP response
         n = write(new_fd, response, strlen(response));
         if (n < 0) {
-            perror("Error writing to socket");
+            perror("Error writing response header to socket");
             close(new_fd);
             exit(EXIT_FAILURE);
         }
+
+        sendfile(new_fd, fp, NULL, (sizeof file_buffer));
+        // n = write(new_fd, file_buffer, bytes_read);
+        // if (n < 0) {
+            // perror("Error writing file content to socket");
+            // close(new_fd);
+            // exit(EXIT_FAILURE);
+        // }
 
         // close connection after everything's done
         close(new_fd);
