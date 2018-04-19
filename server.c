@@ -96,15 +96,22 @@ int main(int argc, char **argv) {
         char* target = strtok(NULL, " ");
         // printf("Target file: %s\n", target);
 
-        char new_target[100];
-        if (!strcmp(target, "/") || (target[strlen(target)-1] == '/')) {
-            target += 1;
-            strncpy(new_target, target, strlen(target));
-            strcat(new_target, "index.html");
+        // char new_target[100];
+        // if (!strcmp(target, "/") || (target[strlen(target)-1] == '/')) {
+        //     target += 1;
+        //     strncpy(new_target, target, strlen(target));
+        //     strcat(new_target, "index.html");
+        // } else {
+        //     target += 1;
+        //     strncpy(new_target, target, strlen(target));
+        //     new_target[strlen(target)] = '\0';
+        // }
+
+        char* new_target;
+        if (!strcmp(target, "/")) {
+            new_target = "index.html";
         } else {
-            target += 1;
-            strncpy(new_target, target, strlen(target));
-            new_target[strlen(target)] = '\0';
+            new_target = target + 1;
         }
 
         printf("Target: %s\n", new_target);
