@@ -1,3 +1,7 @@
+// COMP30023 Sem 1 2018 Assignment 1
+// Nico Eka Dinata < n.dinata@student.unimelb.edu.au >
+// @ndinata
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,15 +21,14 @@
 #define FULL_PATH "./test/index.html"
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
+/******************************************************************************/
 /************************ HELPER FUNCTION PROTOTYPES **************************/
 void handle_socket(int port_no, char* path_to_root);
 char* process_request(char request_buffer[]);
 void process_response(int new_fd, char* path_to_root, char* request_path);
 
 /******************************************************************************/
-
-
-/********************************* MAIN ***************************************/
+/******************************** MAIN ***************************************/
 int main(int argc, char** argv) {
     if (argc < 3) {
         fprintf(stderr, "Usage: %s port path_to_root\n", argv[0]);
@@ -43,8 +46,6 @@ int main(int argc, char** argv) {
 }
 
 /******************************************************************************/
-
-
 /***************************** HELPER FUNCTIONS *******************************/
 /**
  * Handles socket operations as well as receiving and sending HTTP messages
