@@ -147,7 +147,6 @@ char* process_request(char request_buffer[]) {
         assert(request_path);
 
         sprintf(request_path, "%s", INDEX_HTML);
-        request_path[index_html_len] = '\0';
 
     } else if (request_uri[strlen(request_uri)-1] == '/') {
         // Handle case where the request URI is a directory
@@ -157,14 +156,12 @@ char* process_request(char request_buffer[]) {
         assert(request_path);
 
         sprintf(request_path, "%s%s", request_uri, INDEX_HTML);
-        request_path[request_len] = '\0';
 
     } else {
         request_path = (char*)malloc((sizeof *request_path) * strlen(request_uri));
         assert(request_path);
 
         sprintf(request_path, "%s", request_uri+1);
-        request_path[strlen(request_uri)-1] = '\0';
     }
     /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
     printf("Request path:\n%s", request_path);
