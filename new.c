@@ -279,11 +279,13 @@ void process_response(int new_fd, char* full_path) {
     }
 
     // Send out file content
-    n = write(new_fd, file_buffer, bytes_read);
-    if (n < 0) {
-        perror("Error writing file content");
-        close(new_fd);
-        exit(EXIT_FAILURE);
+    if (file_exists) {
+        n = write(new_fd, file_buffer, bytes_read);
+        if (n < 0) {
+            perror("Error writing file content");
+            close(new_fd);
+            exit(EXIT_FAILURE);
+        }
     }
 
     free(response);
