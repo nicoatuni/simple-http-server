@@ -127,7 +127,7 @@ void handle_socket(int port_no, char* path_to_root) {
 /**
  * Processes the HTTP request message to obtain the path of the requested resource
  * @param request_buffer the HTTP request message to be processed
- * @return the full path of the requested resource relative to the root
+ * @return the path of the requested resource relative to the root
  */
 char* process_request(char request_buffer[]) {
     // Get the request-URI
@@ -138,7 +138,7 @@ char* process_request(char request_buffer[]) {
     printf("Strlen(request URI): %lu\n", strlen(request_uri));
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-    // Obtain full path to the requested resource
+    // Obtain path to the requested resource
     size_t len_index_html = strlen(INDEX_HTML);
     char* request_path;
     if (!strcmp(request_uri, "/")) {
@@ -167,8 +167,8 @@ char* process_request(char request_buffer[]) {
         request_path[strlen(request_uri)-1] = '\0';
     }
     /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    printf("Full request path:\n%s", request_path);
-    printf("Strlen(full request path): %lu\n", strlen(request_path));
+    printf("Request path:\n%s", request_path);
+    printf("Strlen(request path): %lu\n", strlen(request_path));
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     return request_path;
@@ -178,7 +178,7 @@ char* process_request(char request_buffer[]) {
  * Formulate and send the HTTP response message
  * @param new_fd the server's socket through which connections come in
  * @param path_to_root the path to web root of the HTTP server
- * @param request_path the full path of the requested resource
+ * @param request_path the path of the requested resource relative to the root
  */
 void process_response(int new_fd, char* path_to_root, char* request_path) {
     // Obtain the requested resource's file extension
