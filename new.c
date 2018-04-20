@@ -14,6 +14,7 @@
 /* * * * * * * * * * * * * HELPER FUNCTION PROTOTYPES * * * * * * * * * * * * */
 void handle_socket(int port_no, char* path_to_root);
 void process_request(int new_fd, char* path_to_root, char request_buffer[]);
+void formulate_response(int new_fd, char* request_path, char* extension);
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -155,7 +156,6 @@ void process_request(int new_fd, char* path_to_root, char request_buffer[]) {
         request_path[request_len] = '\0';
 
     } else {
-        // /t.css
         request_path = (char*)malloc((sizeof *request_path) * strlen(request_uri));
         assert(request_path);
 
@@ -167,5 +167,21 @@ void process_request(int new_fd, char* path_to_root, char request_buffer[]) {
     printf("Strlen(full request path): %lu\n", strlen(request_path));
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-    free(request_path);   
+    // Obtain the requested resource's file extension
+    char req_buff[strlen(request_path)];
+    strcpy(req_buff, request_path);
+
+    char* name = strtok(req_buff, ".");
+    char* extension = strtok(NULL, ".");
+    /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
+    printf("Full request path after getting extension:\n%s", request_path);
+    printf("Extension: %s\n", extension);
+    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+    
+    formulate_response(new_fd, request_path, extension);
+    free(request_path);
+}
+
+void formulate_response(int new_fd, char* request_path, char* extension) {
+
 }
