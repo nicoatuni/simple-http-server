@@ -9,6 +9,7 @@
 #include <assert.h>
 
 #define REQUEST_BUFFER_SIZE 2048
+#define INDEX_HTML "index.html"
 
 /* * * * * * * * * * * * * HELPER FUNCTION PROTOTYPES * * * * * * * * * * * * */
 void handle_socket(int port_no, char* path_to_root);
@@ -133,28 +134,38 @@ void process_request(int new_fd, char* path_to_root, char request_buffer[]) {
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     // Obtain full path to the requested resource
+    size_t len_index_html = strlen(INDEX_HTML);
     char* request_path;
     if (!strcmp(request_uri, "/")) {
         // Redirect root directory to its "index.html"
-        request_path = "index.html";
+        request_path = (char*)malloc((sizeof *request_path) * (len_index_html+1));
+        assert(request_path);
+
+        sprintf(request_path, "%s", INDEX_HTML);
+        request_path[len_index_html] = '\0';
 
     } else if (request_uri[strlen(request_uri)-1] == '/') {
         // Handle case where the request URI is a directory
         request_uri += 1;
-        size_t request_len = strlen("index.html") + strlen(request_uri);
+        size_t request_len = len_index_html + strlen(request_uri);
         request_path = (char*)malloc((sizeof *request_path) * (request_len+1));
         assert(request_path);
 
-        sprintf(request_path, "%s%s", request_uri, "index.html");
+        sprintf(request_path, "%s%s", request_uri, INDEX_HTML);
         request_path[request_len] = '\0';
 
     } else {
-        request_path = request_uri + 1;
+        // /t.css
+        request_path = (char*)malloc((sizeof *request_path) * strlen(request_uri));
+        assert(request_path);
+
+        sprintf(request_path, "%s", request_uri+1);
+        request_path[strlen(request_uri)-1] = '\0';
     }
     /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
     printf("Full request path:\n%s", request_path);
     printf("Strlen(full request path): %lu\n", strlen(request_path));
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-    
 
+    free(request_path);   
 }
