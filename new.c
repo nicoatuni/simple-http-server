@@ -208,6 +208,7 @@ void process_response(int new_fd, char* full_path) {
     int file_exists = 1;
     long file_len;
     char* file_buffer;
+    int bytes_read;
 
     FILE* fp = fopen(full_path, "rb");
     if (fp == NULL) {
@@ -221,7 +222,7 @@ void process_response(int new_fd, char* full_path) {
         file_buffer = (char*)malloc((sizeof *file_buffer) * file_len);
         assert(file_buffer);
 
-        int bytes_read = fread(file_buffer, sizeof(char), file_len, fp);
+        bytes_read = fread(file_buffer, sizeof(char), file_len, fp);
         fclose(fp);
     }
 
@@ -277,6 +278,13 @@ void process_response(int new_fd, char* full_path) {
         exit(EXIT_FAILURE);
     }
 
+    // Send out file content
+    n = write(new_fd, file_buffer, bytes_read);
+    if (n < 0) {
+        perror("Error writing file content");
+        close(new_fd);
+        exit(EXIT_FAILURE);
+    }
 
     free(response);
     if (file_exists) {
