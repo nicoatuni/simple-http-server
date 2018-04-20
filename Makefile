@@ -5,9 +5,9 @@
 CC	= gcc
 
 # CHANGE NEW TO SERVER
-SRC	= new.c
-OBJ	= new.o
-EXE = new
+SRC	= server.c
+OBJ	= server.o
+EXE = server
 
 # Creating the executable
 $(EXE): $(OBJ)
