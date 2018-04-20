@@ -117,6 +117,32 @@ void handle_socket(int port_no, char* path_to_root) {
 }
 
 
+/**
+ * Parses and processes HTTP request message
+ * @param new_fd the server's socket through which connections come in
+ * @param path_to_root the path to web root of the HTTP server
+ * @param request_buffer the HTTP request message to be processed
+ */
 void process_request(int new_fd, char* path_to_root, char request_buffer[]) {
+    // Get the request-URI
+    char* flush = strtok(request_buffer, " ");
+    char* request_uri = strtok(NULL, " ");
+    /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
+    printf("Request URI:\n%s", request_uri);
+    printf("Strlen(request URI): %lu\n", strlen(request_uri));
+    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
+    // Handle case where request URI is '/' — redirect to index.html if it exists
+    char* new_request_uri;
+    if (!strcmp(request_uri, "/")) {
+        new_request_uri = "index.html";
+    } else {
+        new_request_uri = request_uri + 1;
+    }
+    /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
+    printf("New request URI:\n%s", new_request_uri);
+    printf("Strlen(new request URI): %lu\n", strlen(new_request_uri));
+    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+    
+    
 }
