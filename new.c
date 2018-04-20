@@ -8,6 +8,11 @@
 #include <unistd.h>
 #include <assert.h>
 
+/* * * * * * * * * * * * * HELPER FUNCTION PROTOTYPES * * * * * * * * * * * * */
+void handle_socket(int port_no, char* path_to_root);
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 
 int main(int argc, char** argv) {
     if (argc < 3) {
@@ -23,7 +28,14 @@ int main(int argc, char** argv) {
     printf("Path to web root: %s\n", path_to_root);
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-    
+    handle_socket(port_no, path_to_root);
 
     return EXIT_SUCCESS;
+}
+
+/**
+ * Handles creating, listening and accepting connections to the socket
+ */
+void handle_socket(int port_no, char* path_to_root) {
+    
 }
