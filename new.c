@@ -11,6 +11,12 @@
 #define REQUEST_BUFFER_SIZE 2048
 #define INDEX_HTML "index.html"
 
+/* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - - - */
+#define REQUEST_PATH "index.html"
+#define EXTENSION "html"
+#define FULL_PATH "./test/index.html"
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
 /* * * * * * * * * * * * * HELPER FUNCTION PROTOTYPES * * * * * * * * * * * * */
 void handle_socket(int port_no, char* path_to_root);
 char* process_request(char request_buffer[]);
@@ -186,8 +192,19 @@ void process_response(int new_fd, char* path_to_root, char* request_path) {
     char* name = strtok(req_buff, ".");
     char* extension = strtok(NULL, ".");
     /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    printf("Full request path after getting extension:\n%s", request_path);
-    printf("Extension: %s\n", extension);
+    // printf("Full request path after getting extension:\n%s", request_path);
+    // printf("Extension: %s\n", extension);
+    if (!strcmp(request_path, REQUEST_PATH)) {
+        printf("PASS: request path okay!\n");
+    } else {
+        printf("ERROR: request path is not okay.\n");
+    }
+
+    if (!strcmp(extension, EXTENSION)) {
+        printf("PASS: extension is okay!\n");
+    } else {
+        printf("ERROR: extension is not okay.\n");
+    }
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     // Get the full path to the resource
@@ -198,12 +215,16 @@ void process_response(int new_fd, char* path_to_root, char* request_path) {
     assert(full_path);
 
     sprintf(full_path, "%s%s", path_to_root, request_path);
-
     /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    printf("Path_to_root:\n%s", path_to_root);
-    printf("Request path:\n%s", request_path);
-    printf("Strlen(full_path): %lu\n", strlen(full_path));
-    printf("Full path:\n%s", full_path);
+    // printf("Path_to_root:\n%s", path_to_root);
+    // printf("Request path:\n%s", request_path);
+    // printf("Strlen(full_path): %lu\n", strlen(full_path));
+    // printf("Full path:\n%s", full_path);
+    if (!strcmp(full_path, FULL_PATH)) {
+        printf("PASS: Full path is okay!\n");
+    } else {
+        printf("ERROR: Full path is not okay\n");
+    }
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     free(full_path);
