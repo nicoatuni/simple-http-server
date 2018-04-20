@@ -113,11 +113,6 @@ void handle_socket(int port_no, char* path_to_root) {
             exit(EXIT_FAILURE);
         }
         request_buffer[n] = '\0';
-        /* - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - */
-        // printf("Request:\n%s", request_buffer);
-        // printf("Strlen(request): %lu\n", strlen(request_buffer));
-        // printf("Sizeof request: %lu\n", (sizeof request_buffer));
-        /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
         // Obtain the full path of the requested resource 
         char* full_path = get_req_path(request_buffer, path_to_root);
@@ -143,10 +138,6 @@ char* get_req_path(char request_buffer[], char* path_to_root) {
     // Get the request-URI
     char* flush = strtok(request_buffer, " ");
     char* request_uri = strtok(NULL, " ");
-    /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    // printf("Request URI:\n%s", request_uri);
-    // printf("Strlen(request URI): %lu\n", strlen(request_uri));
-    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     // Get the path of the requested resource relative to the web root
     size_t index_html_len = strlen(INDEX_HTML);
@@ -173,10 +164,6 @@ char* get_req_path(char request_buffer[], char* path_to_root) {
 
         sprintf(relative_path, "%s", request_uri+1);
     }
-    /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    // printf("Request relative_path:\n%s", relative_path);
-    // printf("Strlen(request relative_path): %lu\n", strlen(relative_path));
-    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     // Get the full path to the resource
     size_t full_path_len = strlen(path_to_root) + strlen(relative_path);
@@ -186,10 +173,6 @@ char* get_req_path(char request_buffer[], char* path_to_root) {
 
     sprintf(full_path, "%s%s", path_to_root, relative_path);
     /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    // printf("Path_to_root:\n%s", path_to_root);
-    // printf("Request path:\n%s", path);
-    // printf("Strlen(full_path): %lu\n", strlen(full_path));
-    // printf("Full path:\n%s", full_path);
     if (!strcmp(full_path, FULL_PATH)) {
         printf("Full path: PASS ✅\n");
     } else {
@@ -215,8 +198,6 @@ void process_response(int new_fd, char* full_path) {
     char* flush = strtok(req_buff, ".");
     char* extension = strtok(NULL, ".");
     /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    // printf("Full request path after getting extension:\n%s", full_path);
-    // printf("Extension: %s\n", extension);
     if (!strcmp(extension, EXTENSION)) {
         printf("Extension: PASS ✅\n");
     } else {
