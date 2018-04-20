@@ -17,14 +17,15 @@
 #define FULL_PATH "./test/index.html"
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-/* * * * * * * * * * * * * HELPER FUNCTION PROTOTYPES * * * * * * * * * * * * */
+/************************ HELPER FUNCTION PROTOTYPES **************************/
 void handle_socket(int port_no, char* path_to_root);
 char* process_request(char request_buffer[]);
 void process_response(int new_fd, char* path_to_root, char* request_path);
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/******************************************************************************/
 
 
+/********************************* MAIN ***************************************/
 int main(int argc, char** argv) {
     if (argc < 3) {
         fprintf(stderr, "Usage: %s port path_to_root\n", argv[0]);
@@ -34,17 +35,17 @@ int main(int argc, char** argv) {
     // Get command line arguments
     int port_no = atoi(argv[1]);
     char* path_to_root = argv[2];
-    /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    // printf("Port no: %d\n", port_no);
-    // printf("Path to web root: %s\n", path_to_root);
-    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
+    // Handle the connection operations
     handle_socket(port_no, path_to_root);
 
     return EXIT_SUCCESS;
 }
 
+/******************************************************************************/
 
+
+/***************************** HELPER FUNCTIONS *******************************/
 /**
  * Handles socket operations as well as receiving and sending HTTP messages
  * @param port_no the port number through which incoming connections arrive
@@ -177,6 +178,7 @@ char* process_request(char request_buffer[]) {
 
     return request_path;
 }
+
 
 /**
  * Formulate and send the HTTP response message
