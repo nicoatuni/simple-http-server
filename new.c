@@ -143,14 +143,14 @@ char* get_req_path(char request_buffer[], char* path_to_root) {
     char* relative_path;
     if (!strcmp(request_uri, "/")) {
         // Redirect root directory to its "index.html"
-        relative_path = (char*)malloc((sizeof *relative_path) * (index_html_len+1));
+        relative_path = (char*)malloc((sizeof *relative_path) * (index_html_len+2));
         assert(relative_path);
 
-        sprintf(relative_path, "%s", INDEX_HTML);
+        sprintf(relative_path, "%s%s", "/", INDEX_HTML);
 
     } else if (request_uri[strlen(request_uri)-1] == '/') {
         // Handle case where the request URI is a directory
-        request_uri += 1;
+        // request_uri += 1;
         size_t request_len = index_html_len + strlen(request_uri);
         relative_path = (char*)malloc((sizeof *relative_path) * (request_len+1));
         assert(relative_path);
@@ -158,10 +158,10 @@ char* get_req_path(char request_buffer[], char* path_to_root) {
         sprintf(relative_path, "%s%s", request_uri, INDEX_HTML);
 
     } else {
-        relative_path = (char*)malloc((sizeof *relative_path) * strlen(request_uri));
+        relative_path = (char*)malloc((sizeof *relative_path) * (strlen(request_uri)+1));
         assert(relative_path);
 
-        sprintf(relative_path, "%s", request_uri+1);
+        sprintf(relative_path, "%s", request_uri);
     }
 
     // Get the full path to the resource
@@ -279,11 +279,13 @@ void process_response(int new_fd, char* full_path) {
     }
 
     // Send out file content
-    n = write(new_fd, file_buffer, bytes_read);
-    if (n < 0) {
-        perror("Error writing file content");
-        close(new_fd);
-        exit(EXIT_FAILURE);
+    if (file_exists) {
+        n = write(new_fd, file_buffer, bytes_read);
+        if (n < 0) {
+            perror("Error writing file content");
+            close(new_fd);
+            exit(EXIT_FAILURE);
+        }
     }
 
     free(response);
