@@ -188,4 +188,22 @@ void process_response(int new_fd, char* path_to_root, char* request_path) {
     printf("Full request path after getting extension:\n%s", request_path);
     printf("Extension: %s\n", extension);
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+    // Get the full path to the resource
+    size_t full_path_len = strlen(path_to_root) + strlen(request_path);
+    printf("full path len: %lu\n", full_path_len);
+
+    char* full_path = (char*)malloc((sizeof *full_path) * (full_path_len + 1));
+    assert(full_path);
+
+    sprintf(full_path, "%s%s", path_to_root, request_path);
+
+    /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
+    printf("Path_to_root:\n%s", path_to_root);
+    printf("Request path:\n%s", request_path);
+    printf("Strlen(full_path): %lu\n", strlen(full_path));
+    printf("Full path:\n%s", full_path);
+    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+    free(full_path);
 }
