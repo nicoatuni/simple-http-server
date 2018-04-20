@@ -13,8 +13,8 @@
 
 /* * * * * * * * * * * * * HELPER FUNCTION PROTOTYPES * * * * * * * * * * * * */
 void handle_socket(int port_no, char* path_to_root);
-void process_request(int new_fd, char* path_to_root, char request_buffer[]);
-void formulate_response(int new_fd, char* request_path, char* extension);
+char* process_request(char request_buffer[]);
+void process_response(int new_fd, char* path_to_root, char* request_path);
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -111,7 +111,12 @@ void handle_socket(int port_no, char* path_to_root) {
         /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
         // Process the request message
-        process_request(new_fd, path_to_root, request_buffer);
+        char* request_path = process_request(request_buffer);
+        
+        // Formulate and send the HTTP response message
+        process_response(new_fd, path_to_root, request_path);
+
+        free(request_path);
         close(new_fd);
     }
 
@@ -120,12 +125,11 @@ void handle_socket(int port_no, char* path_to_root) {
 
 
 /**
- * Parses and processes HTTP request message
- * @param new_fd the server's socket through which connections come in
- * @param path_to_root the path to web root of the HTTP server
+ * Processes the HTTP request message to obtain the path of the requested resource
  * @param request_buffer the HTTP request message to be processed
+ * @return the full path of the requested resource relative to the root
  */
-void process_request(int new_fd, char* path_to_root, char request_buffer[]) {
+char* process_request(char request_buffer[]) {
     // Get the request-URI
     char* flush = strtok(request_buffer, " ");
     char* request_uri = strtok(NULL, " ");
@@ -167,6 +171,16 @@ void process_request(int new_fd, char* path_to_root, char request_buffer[]) {
     printf("Strlen(full request path): %lu\n", strlen(request_path));
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
+    return request_path;
+}
+
+/**
+ * Formulate and send the HTTP response message
+ * @param new_fd the server's socket through which connections come in
+ * @param path_to_root the path to web root of the HTTP server
+ * @param request_path the full path of the requested resource
+ */
+void process_response(int new_fd, char* path_to_root, char* request_path) {
     // Obtain the requested resource's file extension
     char req_buff[strlen(request_path)];
     strcpy(req_buff, request_path);
@@ -177,11 +191,4 @@ void process_request(int new_fd, char* path_to_root, char request_buffer[]) {
     printf("Full request path after getting extension:\n%s", request_path);
     printf("Extension: %s\n", extension);
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-    
-    formulate_response(new_fd, request_path, extension);
-    free(request_path);
-}
-
-void formulate_response(int new_fd, char* request_path, char* extension) {
-
 }
