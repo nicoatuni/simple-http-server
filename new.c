@@ -16,7 +16,6 @@
 #define INDEX_HTML "index.html"
 
 /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - - - */
-#define REQUEST_PATH "index.html"
 #define EXTENSION "html"
 #define FULL_PATH "./test/index.html"
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
@@ -205,4 +204,36 @@ void process_response(int new_fd, char* full_path) {
     }
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
+    // Read the requested resource/file, if it exists
+    int file_exists = 1;
+    long file_len;
+    char* file_buffer;
+
+    FILE* fp = fopen(full_path, "rb");
+    if (fp == NULL) {
+        file_exists = 0;
+        fclose(fp);
+    } else {
+        fseek(fp, 0, SEEK_END);
+        file_len = ftell(fp);
+        rewind(fp);
+
+        file_buffer = (char*)malloc((sizeof *file_buffer) * file_len);
+        assert(file_buffer);
+
+        int bytes_read = fread(file_buffer, sizeof(char), file_len, fp);
+        fclose(fp);
+    }
+    /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
+    if (!file_exists) {
+        printf("File read: MISSING 📂\n");
+    } else {
+        printf("File read: AVAILABLE 📊\n");
+    }
+    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+
+    if (file_exists) {
+        free(file_buffer);
+    }
 }
