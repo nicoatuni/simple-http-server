@@ -17,7 +17,7 @@
 
 /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - - - */
 #define EXTENSION "html"
-#define FULL_PATH "./test/index.html"
+#define FULL_PATH "./test-script/test/index.html"
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 /******************************************************************************/
@@ -224,12 +224,31 @@ void process_response(int new_fd, char* full_path) {
         int bytes_read = fread(file_buffer, sizeof(char), file_len, fp);
         fclose(fp);
     }
-    /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    if (!file_exists) {
-        printf("File read: MISSING 📂\n");
+
+    // Choose HTTP response line depending on whether the requested file exists
+    char* status_line;
+    if (file_exists) {
+        status_line = "HTTP/1.0 200 OK\r\n";
     } else {
-        printf("File read: AVAILABLE 📊\n");
+        status_line = "HTTP/1.0 404 Not Found\r\n\r\n";
     }
+
+    // Choose MIME-type of the requested file
+    char* mime_type;
+    if (!strcmp(extension, "html")) {
+        mime_type = "Content-Type: text/html\r\n\r\n";
+    } else if (!strcmp(extension, "css")) {
+        mime_type = "Content-Type: text/css\r\n\r\n";
+    } else if (!strcmp(extension, "js")) {
+        mime_type = "Content-Type: text/javascript\r\n\r\n";
+    } else if (!strcmp(extension, "jpg")) {
+        mime_type = "Content-Type: image/jpeg\r\n\r\n";
+    } else {
+        mime_type = "\r\n";
+    }
+    /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
+    printf("%s", status_line);
+    printf("%s", mime_type);
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 
