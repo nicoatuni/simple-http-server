@@ -172,11 +172,11 @@ char* get_req_path(char request_buffer[], char* path_to_root) {
 
     sprintf(full_path, "%s%s", path_to_root, relative_path);
     /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    if (!strcmp(full_path, FULL_PATH)) {
-        printf("Full path: PASS ✅\n");
-    } else {
-        printf("Full path: FAIL ❌\n");
-    }
+    // if (!strcmp(full_path, FULL_PATH)) {
+    //     printf("Full path: PASS ✅\n");
+    // } else {
+    //     printf("Full path: FAIL ❌\n");
+    // }
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     free(relative_path);
@@ -197,11 +197,11 @@ void process_response(int new_fd, char* full_path) {
     char* flush = strtok(req_buff, ".");
     char* extension = strtok(NULL, ".");
     /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    if (!strcmp(extension, EXTENSION)) {
-        printf("Extension: PASS ✅\n");
-    } else {
-        printf("Extension: FAIL ❌\n");
-    }
+    // if (!strcmp(extension, EXTENSION)) {
+    //     printf("Extension: PASS ✅\n");
+    // } else {
+    //     printf("Extension: FAIL ❌\n");
+    // }
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     // Read the requested resource/file, if it exists
@@ -247,8 +247,8 @@ void process_response(int new_fd, char* full_path) {
         mime_type = "\r\n";
     }
     /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    printf("%s", status_line);
-    printf("%s", mime_type);
+    // printf("%s", status_line);
+    // printf("%s", mime_type);
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     // Send out the HTTP response header
@@ -262,13 +262,13 @@ void process_response(int new_fd, char* full_path) {
         sprintf(response, "%s", status_line);
     }
     /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    int i;
-    for (i = 0; i < 45; i++) {
-        if (response[i] == '\0') {
-            printf("\\0 is detected at index %d\n", i);
-        }
-        printf("response[%d] = %c\n", i, response[i]);
-    }
+    // int i;
+    // for (i = 0; i < 45; i++) {
+    //     if (response[i] == '\0') {
+    //         printf("\\0 is detected at index %d\n", i);
+    //     }
+    //     printf("response[%d] = %c\n", i, response[i]);
+    // }
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
     int n = write(new_fd, response, strlen(response));
     if (n < 0) {
