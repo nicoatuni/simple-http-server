@@ -105,6 +105,7 @@ void handle_socket(int port_no, char* path_to_root) {
             exit(EXIT_FAILURE);
         }
         /* - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - */
+        request_buffer[n] = '\0';
         printf("Request:\n%s", request_buffer);
         printf("Strlen(request): %lu\n", strlen(request_buffer));
         printf("Sizeof request: %lu\n", (sizeof request_buffer));
