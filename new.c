@@ -251,7 +251,34 @@ void process_response(int new_fd, char* full_path) {
     printf("%s", mime_type);
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
+    // Send out the HTTP response header
+    size_t response_len = strlen(status_line) + strlen(mime_type);
+    char* response = (char*)malloc((sizeof *response) * response_len);
+    assert(response);
 
+    if (file_exists) {
+        sprintf(response, "%s%s", status_line, mime_type);
+    } else {
+        sprintf(response, "%s", status_line);
+    }
+    /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
+    int i;
+    for (i = 0; i < 45; i++) {
+        if (response[i] == '\0') {
+            printf("\\0 is detected at index %d\n", i);
+        }
+        printf("response[%d] = %c\n", i, response[i]);
+    }
+    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+    int n = write(new_fd, response, strlen(response));
+    if (n < 0) {
+        perror("Error writing response header");
+        close(new_fd);
+        exit(EXIT_FAILURE);
+    }
+
+
+    free(response);
     if (file_exists) {
         free(file_buffer);
     }
