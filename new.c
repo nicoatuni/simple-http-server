@@ -150,7 +150,6 @@ char* get_req_path(char request_buffer[], char* path_to_root) {
 
     } else if (request_uri[strlen(request_uri)-1] == '/') {
         // Handle case where the request URI is a directory
-        // request_uri += 1;
         size_t request_len = index_html_len + strlen(request_uri);
         relative_path = (char*)malloc((sizeof *relative_path) * (request_len+1));
         assert(relative_path);
@@ -171,13 +170,6 @@ char* get_req_path(char request_buffer[], char* path_to_root) {
     assert(full_path);
 
     sprintf(full_path, "%s%s", path_to_root, relative_path);
-    /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    // if (!strcmp(full_path, FULL_PATH)) {
-    //     printf("Full path: PASS ✅\n");
-    // } else {
-    //     printf("Full path: FAIL ❌\n");
-    // }
-    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     free(relative_path);
     return full_path;
@@ -196,13 +188,6 @@ void process_response(int new_fd, char* full_path) {
 
     char* flush = strtok(req_buff, ".");
     char* extension = strtok(NULL, ".");
-    /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    // if (!strcmp(extension, EXTENSION)) {
-    //     printf("Extension: PASS ✅\n");
-    // } else {
-    //     printf("Extension: FAIL ❌\n");
-    // }
-    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     // Read the requested resource/file, if it exists
     int file_exists = 1;
@@ -247,12 +232,8 @@ void process_response(int new_fd, char* full_path) {
     } else {
         mime_type = "\r\n";
     }
-    /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    // printf("%s", status_line);
-    // printf("%s", mime_type);
-    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-    // Send out the HTTP response header
+    // Prepare the HTTP response header
     size_t response_len = strlen(status_line) + strlen(mime_type);
     char* response = (char*)malloc((sizeof *response) * response_len);
     assert(response);
@@ -262,15 +243,8 @@ void process_response(int new_fd, char* full_path) {
     } else {
         sprintf(response, "%s", status_line);
     }
-    /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    // int i;
-    // for (i = 0; i < 45; i++) {
-    //     if (response[i] == '\0') {
-    //         printf("\\0 is detected at index %d\n", i);
-    //     }
-    //     printf("response[%d] = %c\n", i, response[i]);
-    // }
-    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ 
+    // Send out the HTTP response header
     int n = write(new_fd, response, strlen(response));
     if (n < 0) {
         perror("Error writing response header");
