@@ -139,20 +139,20 @@ char* process_request(char request_buffer[]) {
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     // Obtain path to the requested resource
-    size_t len_index_html = strlen(INDEX_HTML);
+    size_t index_html_len = strlen(INDEX_HTML);
     char* request_path;
     if (!strcmp(request_uri, "/")) {
         // Redirect root directory to its "index.html"
-        request_path = (char*)malloc((sizeof *request_path) * (len_index_html+1));
+        request_path = (char*)malloc((sizeof *request_path) * (index_html_len+1));
         assert(request_path);
 
         sprintf(request_path, "%s", INDEX_HTML);
-        request_path[len_index_html] = '\0';
+        request_path[index_html_len] = '\0';
 
     } else if (request_uri[strlen(request_uri)-1] == '/') {
         // Handle case where the request URI is a directory
         request_uri += 1;
-        size_t request_len = len_index_html + strlen(request_uri);
+        size_t request_len = index_html_len + strlen(request_uri);
         request_path = (char*)malloc((sizeof *request_path) * (request_len+1));
         assert(request_path);
 
