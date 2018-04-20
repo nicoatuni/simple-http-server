@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
 
 
 /**
- * Handles creating, listening and accepting connections to the socket
+ * Handles socket operations as well as receiving and sending HTTP messages
  * @param port_no the port number through which incoming connections arrive
  * @param path_to_root the path to web root of the HTTP server
  */
@@ -110,7 +110,7 @@ void handle_socket(int port_no, char* path_to_root) {
         printf("Sizeof request: %lu\n", (sizeof request_buffer));
         /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-        // Process the request message
+        // Process the HTTP request message
         char* request_path = process_request(request_buffer);
         
         // Formulate and send the HTTP response message
