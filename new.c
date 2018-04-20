@@ -35,8 +35,8 @@ int main(int argc, char** argv) {
     int port_no = atoi(argv[1]);
     char* path_to_root = argv[2];
     /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    printf("Port no: %d\n", port_no);
-    printf("Path to web root: %s\n", path_to_root);
+    // printf("Port no: %d\n", port_no);
+    // printf("Path to web root: %s\n", path_to_root);
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     handle_socket(port_no, path_to_root);
@@ -110,11 +110,11 @@ void handle_socket(int port_no, char* path_to_root) {
             close(fd);
             exit(EXIT_FAILURE);
         }
-        /* - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - */
         request_buffer[n] = '\0';
-        printf("Request:\n%s", request_buffer);
-        printf("Strlen(request): %lu\n", strlen(request_buffer));
-        printf("Sizeof request: %lu\n", (sizeof request_buffer));
+        /* - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - */
+        // printf("Request:\n%s", request_buffer);
+        // printf("Strlen(request): %lu\n", strlen(request_buffer));
+        // printf("Sizeof request: %lu\n", (sizeof request_buffer));
         /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
         // Process the HTTP request message
@@ -141,8 +141,8 @@ char* process_request(char request_buffer[]) {
     char* flush = strtok(request_buffer, " ");
     char* request_uri = strtok(NULL, " ");
     /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    printf("Request URI:\n%s", request_uri);
-    printf("Strlen(request URI): %lu\n", strlen(request_uri));
+    // printf("Request URI:\n%s", request_uri);
+    // printf("Strlen(request URI): %lu\n", strlen(request_uri));
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     // Obtain path to the requested resource
@@ -171,8 +171,8 @@ char* process_request(char request_buffer[]) {
         sprintf(request_path, "%s", request_uri+1);
     }
     /* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - */
-    printf("Request path:\n%s", request_path);
-    printf("Strlen(request path): %lu\n", strlen(request_path));
+    // printf("Request path:\n%s", request_path);
+    // printf("Strlen(request path): %lu\n", strlen(request_path));
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     return request_path;
@@ -195,21 +195,20 @@ void process_response(int new_fd, char* path_to_root, char* request_path) {
     // printf("Full request path after getting extension:\n%s", request_path);
     // printf("Extension: %s\n", extension);
     if (!strcmp(request_path, REQUEST_PATH)) {
-        printf("PASS: request path okay!\n");
+        printf("Request path: PASS ✅\n");
     } else {
-        printf("ERROR: request path is not okay.\n");
+        printf("Request path: FAIL ❌\n");
     }
 
     if (!strcmp(extension, EXTENSION)) {
-        printf("PASS: extension is okay!\n");
+        printf("Extension: PASS ✅\n");
     } else {
-        printf("ERROR: extension is not okay.\n");
+        printf("Extension: FAIL ❌\n");
     }
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     // Get the full path to the resource
     size_t full_path_len = strlen(path_to_root) + strlen(request_path);
-    printf("full path len: %lu\n", full_path_len);
 
     char* full_path = (char*)malloc((sizeof *full_path) * (full_path_len + 1));
     assert(full_path);
@@ -221,9 +220,9 @@ void process_response(int new_fd, char* path_to_root, char* request_path) {
     // printf("Strlen(full_path): %lu\n", strlen(full_path));
     // printf("Full path:\n%s", full_path);
     if (!strcmp(full_path, FULL_PATH)) {
-        printf("PASS: Full path is okay!\n");
+        printf("Full path: PASS ✅\n");
     } else {
-        printf("ERROR: Full path is not okay\n");
+        printf("Full path: FAIL ❌\n");
     }
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
