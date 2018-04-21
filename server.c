@@ -190,19 +190,22 @@ void process_response(int new_fd, char* full_path) {
     long file_len;
     char* file_buffer;
     int bytes_read;
+    char file_buffer[256];
+    memset(file_buffer, 0, 256);
 
     FILE* fp = fopen(full_path, "rb");
     if (fp == NULL) {
         file_exists = 0;
     } else {
-        fseek(fp, 0, SEEK_END);
-        file_len = ftell(fp);
-        rewind(fp);
+        // fseek(fp, 0, SEEK_END);
+        // file_len = ftell(fp);
+        // rewind(fp);
 
-        file_buffer = (char*)malloc((sizeof *file_buffer) * file_len);
-        assert(file_buffer);
+        // file_buffer = (char*)malloc((sizeof *file_buffer) * file_len);
+        // assert(file_buffer);
 
-        bytes_read = fread(file_buffer, sizeof(char), file_len, fp);
+        // bytes_read = fread(file_buffer, sizeof(char), file_len, fp);
+        bytes_read = fread(file_buffer, sizeof(char), 255, fp);
         fclose(fp);
     }
 
@@ -256,7 +259,7 @@ void process_response(int new_fd, char* full_path) {
             close(new_fd);
             exit(EXIT_FAILURE);
         }
-        free(file_buffer);
+        // free(file_buffer);
     }
 
     free(response);
