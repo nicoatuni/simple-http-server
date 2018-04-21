@@ -97,30 +97,36 @@ void handle_socket(int port_no, char* path_to_root) {
             exit(EXIT_FAILURE);
         }
 
-        // Initialise request buffer
-        memset(request_buffer, 0, REQUEST_BUFFER_SIZE);
-
-        // Read the HTTP request message
-        int n = read(new_fd, request_buffer, REQUEST_BUFFER_SIZE-1);
-        if (n < 0) {
-            perror("Error reading from socket");
-            close(new_fd);
+        // child process — for concurrency
+        if (!fork()) {
             close(fd);
-            exit(EXIT_FAILURE);
-        }
-        request_buffer[n] = '\0';
 
-        // Obtain the full path of the requested resource 
-        char* full_path = get_req_path(request_buffer, path_to_root);
+            // Initialise request buffer
+            memset(request_buffer, 0, REQUEST_BUFFER_SIZE);
+
+            // Read the HTTP request message
+            int n = read(new_fd, request_buffer, REQUEST_BUFFER_SIZE-1);
+            if (n < 0) {
+                perror("Error reading from socket");
+                close(new_fd);
+                close(fd);
+                exit(EXIT_FAILURE);
+            }
+            request_buffer[n] = '\0';
+
+            // Obtain the full path of the requested resource 
+            char* full_path = get_req_path(request_buffer, path_to_root);
         
-        // Process and send the HTTP response message
-        process_response(new_fd, full_path);
+            // Process and send the HTTP response message
+            process_response(new_fd, full_path);
 
-        free(full_path);
+            free(full_path);
+            close(new_fd);
+            exit(EXIT_SUCCESS);
+        }
+
         close(new_fd);
     }
-
-    close(fd);
 }
 
 
