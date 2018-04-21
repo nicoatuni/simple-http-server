@@ -13,6 +13,7 @@
 #include <assert.h>
 
 #define REQUEST_BUFFER_SIZE 2048
+#define FILE_BUFFER_SIZE 30000
 #define INDEX_HTML "index.html"
 
 
@@ -190,8 +191,8 @@ void process_response(int new_fd, char* full_path) {
     long file_len;
     // char* file_buffer;
     int bytes_read;
-    char file_buffer[20000];
-    memset(file_buffer, 0, 20000);
+    unsigned char file_buffer[FILE_BUFFER_SIZE];
+    memset(file_buffer, 0, FILE_BUFFER_SIZE);
 
     FILE* fp = fopen(full_path, "rb");
     if (fp == NULL) {
@@ -205,7 +206,7 @@ void process_response(int new_fd, char* full_path) {
         // assert(file_buffer);
 
         // bytes_read = fread(file_buffer, sizeof(char), file_len, fp);
-        bytes_read = fread(file_buffer, sizeof(char), 20000-1, fp);
+        bytes_read = fread(file_buffer, sizeof(char), FILE_BUFFER_SIZE-1, fp);
         fclose(fp);
     }
 
