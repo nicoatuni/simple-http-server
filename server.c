@@ -192,7 +192,8 @@ void process_response(int new_fd, char* full_path) {
     // Read the requested resource/file, if it exists
     int file_exists = 1;
     long file_len;
-    char* file_buffer;
+    // char* file_buffer;
+    unsigned char file_buffer[20000];
     int bytes_read;
 
     FILE* fp = fopen(full_path, "rb");
@@ -200,12 +201,12 @@ void process_response(int new_fd, char* full_path) {
         file_exists = 0;
         fclose(fp);
     } else {
-        fseek(fp, 0, SEEK_END);
-        file_len = ftell(fp);
-        rewind(fp);
+        // fseek(fp, 0, SEEK_END);
+        // file_len = ftell(fp);
+        // rewind(fp);
 
-        file_buffer = (char*)malloc((sizeof *file_buffer) * file_len);
-        assert(file_buffer);
+        // file_buffer = (char*)malloc((sizeof *file_buffer) * file_len);
+        // assert(file_buffer);
 
         bytes_read = fread(file_buffer, sizeof(char), file_len, fp);
         fclose(fp);
@@ -263,7 +264,7 @@ void process_response(int new_fd, char* full_path) {
     }
 
     free(response);
-    if (file_exists) {
-        free(file_buffer);
-    }
+    // if (file_exists) {
+        // free(file_buffer);
+    // }
 }
