@@ -186,82 +186,71 @@ void process_response(int new_fd, char* full_path) {
     char* flush = strtok(req_buff, ".");
     char* extension = strtok(NULL, ".");
 
-    // Read the requested resource/file, if it exists
-    int file_exists = 1;
     long file_len;
-    // char* file_buffer;
     int bytes_read;
+    char* status_line;
+    int n;
+
+    // Buffer for the file content
     unsigned char file_buffer[FILE_BUFFER_SIZE];
     memset(file_buffer, 0, FILE_BUFFER_SIZE);
 
+    // Read the requested file, if it exists
     FILE* fp = fopen(full_path, "rb");
     if (fp == NULL) {
-        file_exists = 0;
-    } else {
-        // fseek(fp, 0, SEEK_END);
-        // file_len = ftell(fp);
-        // rewind(fp);
-
-        // file_buffer = (char*)malloc((sizeof *file_buffer) * file_len);
-        // assert(file_buffer);
-
-        // bytes_read = fread(file_buffer, sizeof(char), file_len, fp);
-        bytes_read = fread(file_buffer, sizeof(char), FILE_BUFFER_SIZE-1, fp);
-        fclose(fp);
-    }
-
-    // Choose HTTP response line depending on whether the requested file exists
-    char* status_line;
-    if (file_exists) {
-        status_line = "HTTP/1.0 200 OK\r\n";
-    } else {
         status_line = "HTTP/1.0 404 Not Found\r\n\r\n";
-    }
 
-    // Choose MIME-type of the requested file
-    char* mime_type;
-    if (!strcmp(extension, "html")) {
-        mime_type = "Content-Type: text/html\r\n\r\n";
-    } else if (!strcmp(extension, "css")) {
-        mime_type = "Content-Type: text/css\r\n\r\n";
-    } else if (!strcmp(extension, "js")) {
-        mime_type = "Content-Type: text/javascript\r\n\r\n";
-    } else if (!strcmp(extension, "jpg")) {
-        mime_type = "Content-Type: image/jpeg\r\n\r\n";
-    } else {
-        mime_type = "\r\n";
-    }
-
-    // Prepare the HTTP response header
-    size_t response_len = strlen(status_line) + strlen(mime_type);
-    char* response = (char*)malloc((sizeof *response) * response_len);
-    assert(response);
-
-    // Send only the response status line if 404
-    if (file_exists) {
-        sprintf(response, "%s%s", status_line, mime_type);
-    } else {
-        sprintf(response, "%s", status_line);
-    }
- 
-    // Send out the HTTP response header
-    int n = write(new_fd, response, strlen(response));
-    if (n < 0) {
-        perror("Error writing response header");
-        close(new_fd);
-        exit(EXIT_FAILURE);
-    }
-
-    // Send out file content if status is 200 OK
-    if (file_exists) {
-        n = write(new_fd, file_buffer, bytes_read);
+        // Send just the response status line if 404
+        n = write(new_fd, status_line, strlen(status_line));
         if (n < 0) {
-            perror("Error writing file content");
+            perror("Error writing response header");
             close(new_fd);
             exit(EXIT_FAILURE);
         }
-        // free(file_buffer);
-    }
 
-    free(response);
+    } else {
+        status_line = "HTTP/1.0 200 OK\r\n";
+
+        // Choose the appropriate MIME-type of the requested file
+        char* mime_type;
+        if (!strcmp(extension, "html")) {
+            mime_type = "Content-Type: text/html\r\n\r\n";
+        } else if (!strcmp(extension, "css")) {
+            mime_type = "Content-Type: text/css\r\n\r\n";
+        } else if (!strcmp(extension, "js")) {
+            mime_type = "Content-Type: text/javascript\r\n\r\n";
+        } else if (!strcmp(extension, "jpg")) {
+            mime_type = "Content-Type: image/jpeg\r\n\r\n";
+        } else {
+            mime_type = "\r\n";
+        }
+        
+        // Prepare the HTTP response header
+        size_t response_len = strlen(status_line) + strlen(mime_type);
+        char* response = (char*)malloc((sizeof *response) * response_len);
+        assert(response);
+
+        sprintf(response, "%s%s", status_line, mime_type);
+
+        // Send out the HTTP response header
+        n = write(new_fd, response, strlen(response));
+        if (n < 0) {
+            perror("Error writing response header");
+            close(new_fd);
+            exit(EXIT_FAILURE);
+        }
+
+        // Send out the file content
+        while ((bytes_read = fread(file_buffer, sizeof(char), FILE_BUFFER_SIZE-1, fp)) > 0) {
+            n = write(new_fd, file_buffer, bytes_read);
+            if (n < 0) {
+                perror("Error writing file content");
+                close(new_fd);
+                exit(EXIT_FAILURE);
+            }
+        }
+
+        free(response);
+        fclose(fp);
+    }
 }
