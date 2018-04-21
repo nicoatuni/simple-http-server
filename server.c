@@ -194,7 +194,6 @@ void process_response(int new_fd, char* full_path) {
     FILE* fp = fopen(full_path, "rb");
     if (fp == NULL) {
         file_exists = 0;
-        // fclose(fp);
     } else {
         fseek(fp, 0, SEEK_END);
         file_len = ftell(fp);
@@ -234,6 +233,7 @@ void process_response(int new_fd, char* full_path) {
     char* response = (char*)malloc((sizeof *response) * response_len);
     assert(response);
 
+    // Send only the response status line if 404
     if (file_exists) {
         sprintf(response, "%s%s", status_line, mime_type);
     } else {
@@ -248,7 +248,7 @@ void process_response(int new_fd, char* full_path) {
         exit(EXIT_FAILURE);
     }
 
-    // Send out file content
+    // Send out file content if status is 200 OK
     if (file_exists) {
         n = write(new_fd, file_buffer, bytes_read);
         if (n < 0) {
