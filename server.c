@@ -15,10 +15,6 @@
 #define REQUEST_BUFFER_SIZE 2048
 #define INDEX_HTML "index.html"
 
-/* - - - - - - - - - - - - - - - DEBUGGING - - - - - - - - - - - - - - - - - */
-#define EXTENSION "html"
-#define FULL_PATH "./test-script/test/index.html"
-/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 /******************************************************************************/
 /************************ HELPER FUNCTION PROTOTYPES **************************/
@@ -260,10 +256,8 @@ void process_response(int new_fd, char* full_path) {
             close(new_fd);
             exit(EXIT_FAILURE);
         }
+        free(file_buffer);
     }
 
     free(response);
-    if (file_exists) {
-        free(file_buffer);
-    }
 }
