@@ -13,7 +13,7 @@
 #include <assert.h>
 
 #define REQUEST_BUFFER_SIZE 2048
-#define FILE_BUFFER_SIZE 30000
+#define FILE_BUFFER_SIZE 512
 #define INDEX_HTML "index.html"
 
 
