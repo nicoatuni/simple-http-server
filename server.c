@@ -188,7 +188,7 @@ void process_response(int new_fd, char* full_path) {
     // Read the requested resource/file, if it exists
     int file_exists = 1;
     long file_len;
-    char* file_buffer;
+    // char* file_buffer;
     int bytes_read;
     char file_buffer[256];
     memset(file_buffer, 0, 256);
