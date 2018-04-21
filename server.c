@@ -198,7 +198,7 @@ void process_response(int new_fd, char* full_path) {
     FILE* fp = fopen(full_path, "rb");
     if (fp == NULL) {
         file_exists = 0;
-        fclose(fp);
+        // fclose(fp);
     } else {
         fseek(fp, 0, SEEK_END);
         file_len = ftell(fp);
