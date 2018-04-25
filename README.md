@@ -1,6 +1,6 @@
 # COMP30023 Project 1
-Implementation of a simple HTTP/1.0 server that serves files to GET requests. The response statuses that it handles are "200 OK" and "404 Not Found".
 #### By Nico Dinata
+Implementation of a simple HTTP/1.0 server that serves files to GET requests. The response statuses that it handles are "200 OK" and "404 Not Found".
 
 ## How to test
 1. Clone this repo onto your own machine and `cd` into it.
