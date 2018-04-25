@@ -2,6 +2,11 @@
 #### By Nico Dinata
 Implementation of a simple HTTP/1.0 server that serves files to GET requests. The response statuses that it handles are "200 OK" and "404 Not Found".
 
+## Dependencies
+- gcc
+- make
+- curl/wget
+
 ## How to test
 1. Clone this repo onto your own machine and `cd` into it.
 2. `make`
