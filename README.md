@@ -12,7 +12,7 @@ Implementation of a simple multi-threaded HTTP/1.0 server that serves files to G
 A test script is provided, which would run the server and request for the files in the `test` directory. To run the test script:
 1. Clone this repo and `cd` into it.
 2. Compile the server with `make`.
-3. Run `./test_script.sh server any_port_no` where `any_port_no` is any unregistered port number on your machine.
+3. Make sure `test_script.sh` is executable and run `./test_script.sh server any_port_no` where `any_port_no` is any unregistered port number on your machine.
 4. Clean up with `make clobber`.
 
 ### Running the server
